@@ -248,6 +248,7 @@ Synchronize the wikiTag Bundle documents with the host bundle. This synchronizat
 Allow loading of fixtures to populate the database.
 
 The wikitag document table must exist and be synchronized. There fore the following commands must have been executed:
+  
   +  php app/console wikitag:generate-document-class
   +  php app/console wikitag:sync-doc
 
