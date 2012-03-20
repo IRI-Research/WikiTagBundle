@@ -245,3 +245,19 @@ Automatically reorder documents tags. For each documents treated, each tag of th
 ### wikitag:sync-doc
 Synchronize the wikiTag Bundle documents with the host bundle. This synchronization is made according to the fields defined in the bundle configuration.
 
+### wikitag:load-fixtures
+Allow loading of fixtures to populate the database.
+The wikitag document table must exist and be synchronized. There fore the following commands must have been executed:
+  + php app/console wikitag:generate-document-class
+  + php app/console wikitag:sync-doc
+The wikitag\_document.external\_id field must match the datasheet field fo the taggedsheet table.
+This command import in order categories, tags and documents\_tags.
+you may have memory problem. In this case you can import data by slices. Here is an example:
+  + all categories : php app/console wikitag:load-fixtures -C /path/to/data.json
+  + all tags : php app/console wikitag:load-fixtures -T /path/to/data.json
+  + 20000 first doctags: php app/console wikitag:load-fixtures -D -E 20000 /path/to/data.json
+  + 20000 other doctags: php app/console wikitag:load-fixtures -D -B 20001 -E 40000 /path/to/data.json
+  + last doctags: php app/console wikitag:load-fixtures -B 40001 /path/to/data.json
+
+The -B (index Begin) and -E 9index End) works alson on the tags. Therefore you cans import tags also in slices.
+ 
