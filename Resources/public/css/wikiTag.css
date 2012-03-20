@@ -1,0 +1,254 @@
+/*
+ * This file is part of the WikiTagBundle package.
+ *
+ * (c) IRI <http://www.iri.centrepompidou.fr/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+@charset "UTF-8";
+
+.wikitag_hand_cursor, .wikitag_reset_wp_info {
+    cursor: pointer;
+}
+#wikitag_actions span {
+    margin-left: 5px;
+}
+.wikitag_document_table {
+    float: left;
+    overflow: auto;
+    width: 100%;
+    min-height: 300px;
+}
+#wikitag_table {
+    width: 100%;
+    border-spacing: 0px;
+    min-width: 600px;
+}
+#wikitag_table td, th {
+    padding: 3px;
+}
+#wikitag_table tr, #wikitag_alltags_table tr {
+    height: 25px;
+}
+.wikitag_text_centered {
+    text-align: center;
+}
+.wikitag_large_25 {
+    width: 25px;
+}
+tr.wikitag_oddline {
+    background: white;
+}
+tr.wikitag_evenline {
+    background: #d8d8d8;
+}
+tr.wikitag_oddline:hover, tr.wikitag_evenline:hover {
+    background: lightblue;
+}
+tr.wikitag_dragged_row td {
+    color: yellow;
+    background-color: black;
+}
+.wikitag_hidden {
+    display: none;
+}
+
+/* Styles for images in tables */
+.wikitag_a_icon {
+    width: 16px;
+    height: 16px;
+    display: block;
+    margin: 0 auto;
+}
+.wikitag_wp_link {
+    background-image: url('../images/arrow_right.png');
+}
+.wikitag_wp_nolink {
+    background-image: url('../images/wikipedia_search.png');
+}
+.wikitag_wp_permalink {
+    background-image: url('../images/clock_arrow.png');
+}
+.wikitag_wp_dbplink {
+    background-image: url('../images/arrow_green_right.png');
+}
+.wikitag_wp_redirlink {
+    background-image: url('../images/arrow_redir.png');
+}
+.wikitag_td_icon {
+    width: 16px;
+    height: 16px;
+    margin: 0 auto;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.wikitag_updown_td {
+    cursor: n-resize;
+    background-image: url('../images/arrow_up_down.png');
+}
+.wikitag_updown_td span {
+    display: none;
+}
+.wikitag_indicator {
+	cursor: progress;
+	background-image: url('../images/indicator.gif');
+}
+
+.wikitag_remove_wp_link {
+	cursor: pointer;
+    background-image: url('../images/red_cross.png');
+}
+
+.wikitag_relaunch_wp_search {
+	cursor : pointer;
+	background-image:  url('../images/arrow_refresh.png');
+}
+
+.wikitag_remove_tag_from_list {
+    cursor: pointer;
+    background-image: url('../images/tag_remove.png');
+}
+
+/* Styles for the list of columns in document tag list*/
+#wikitag_ul_target
+{
+    list-style: none;
+    background-color: #eee;
+}
+#wikitag_ul_target li
+{
+    background-repeat: no-repeat;
+    padding-left: 20px;
+}
+#wikitag_thSelectColumn div.cmDiv
+{
+    display: inline;
+    background: none;
+    border: 0;
+}
+#wikitag_thSelectColumn li.main
+{
+    padding: 0;
+    background: none;
+    width: 100%;
+    text-align: right;
+}
+#wikitag_thSelectColumn li.main li
+{
+    text-align: left;
+    padding-right: 2px;
+}
+#wikitag_thSelectColumn
+{
+    padding-right: 2px;
+    width: 10px;
+}
+#wikitag_ulSelectColumn
+{
+    vertical-align: middle;
+}
+li.wikitag_advon
+{
+    background: url(../images/tick.png) 0 50%;
+}
+li.wikitag_advoff
+{
+    background: url(../images/cross.png) 0 50%;
+}
+li.wikitag_reinit
+{
+    background: url(../images/arrow_rotate_clockwise.png) 0 50%;
+}
+.clickMenu div.inner {
+    left: -140px !important;
+}
+
+
+/* styles for the 4 types of STATUS */ 
+.wikitag_null_result {
+    color: #000000;
+}
+.wikitag_redirection {
+    color: #0000ff;
+    font-weight: bold;
+    font-style: italic;
+}
+.wikitag_homonyme {
+    color: #000000;
+    font-weight: bold;
+}
+.wikitag_match {
+    color: #0000ff;
+    font-weight: bold;
+}
+/* END styles for the 4 types of STATUS */
+
+
+#search_form_div {
+    text-align: center;
+    padding: 10px;
+    margin: 10px 10px;
+    margin-bottom: 30px;
+    background-color:#ececec;
+    border: 1px solid #7E7E7E
+}
+
+#search_form ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+#search_form ul li {
+	display: inline;
+}
+
+
+/* Styles for all tags list table */
+#wikitag_alltags_table {
+    min-width: 600px;
+    border-spacing: 0px;
+}
+#wikitag_alltags_table td, th {
+    padding: 3px;
+}
+
+
+/* Styles for hidden context div, displayed on text selected */
+/* These styles are not meant to be changed. There are needed in order to place and display the context div. */
+.wikitag_context_static {
+    display: none;
+    float: none;
+    position: absolute;
+}
+.wikitag_context_static {
+    width: 300px;
+}
+/* These styles can be changed. */
+.wikitag_context_change {
+    width: 260px;
+    border: 2px;
+    background: #97fefd;
+}
+.wikitag_context_change input {
+    width: 250px;
+}
+.wikitag_context_result {
+    width: 500px !important;
+}
+.wikitag_context_result_item {
+    text-indent:-5px;
+}
+.wikitag_context_result_title {
+    font-weight: bold;
+}
+.wikitag_context_result_snippet {
+    font-size: 11.5px;
+}
+.searchmatch {
+    color: #0000ff;
+}
+
+

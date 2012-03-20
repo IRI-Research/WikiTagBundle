@@ -1,0 +1,60 @@
+{#
+  This file is part of the WikiTagBundle package.
+ 
+  (c) IRI <http://www.iri.centrepompidou.fr/>
+ 
+  For the full copyright and license information, please view the LICENSE
+  file that was distributed with this source code.
+#}
+{# partial display to add the needed Javascript #}
+<script type="text/javascript" src="{{ asset('bundles/wikitag/js/jquery.min.js') }}" ></script>
+<script type="text/javascript" src="{{ asset('bundles/wikitag/js/jquery.qtip.min.js') }}" ></script>
+<script type="text/javascript" src="{{ asset('bundles/wikitag/js/jquery.validate.js') }}" ></script>
+<script type="text/javascript" src="{{ asset('bundles/wikitag/js/jquery.textchange.min.js') }}" ></script>
+<script type="text/javascript" src="{{ asset('bundles/wikitag/js/jquery.tablednd_0_5.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/wikitag/js/jquery-ui.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/wikitag/js/jquery.jeditable.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/wikitag/js/jquery.clickmenu.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/wikitag/js/jquery.cookie.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/wikitag/js/jquery.columnmanager.iri.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/wikitag/js/wikiTag.js') }}" ></script>
+<script type="text/javascript">
+
+    var global_csrf_token = "{# csrf_token #}";
+    var static_url = "{{ asset('bundles/wikitag/') }}";
+    var tag_up_down_url = "{{ url('wikitag_tag_up_down') }}";
+    var remove_tag_from_list_url = "{{ url('wikitag_remove_tag_from_list') }}";
+    {% if tags_list==true %}
+    var modify_tag_url = "{{ url('wikitag_modify_tag_in_list') }}";
+    {% else %}
+    var modify_tag_url = "{{ url('wikitag_modify_documenttag') }}";
+    {% endif %}
+    var reset_wp_info_url = "{{ url('wikitag_reset_wp_info') }}";
+    var relaunch_wp_search_url = "{{ url('wikitag_relaunch_wp_search') }}";
+    var reorder_tag_datasheet_url = "{{ url('wikitag_reorder_tag_document') }}";
+    var add_tag_url = "{{ url('wikitag_add_tag') }}";
+    var remove_wp_link_url = "{{ url('wikitag_remove_wp_link') }}";
+    var update_tag_alias_url = "{{ url('wikitag_update_tag_alias') }}";
+    var update_tag_category_url = "{{ url('wikitag_update_tag_category') }}";
+    var categories_list = '{{ categories|raw }}';
+    // We prepare the list of the columns to hide
+    var columsToHide = [];
+    {% if columns is not null and 'order' not in columns %}columsToHide.push(1);{% endif %}
+    {% if columns is not null and 'id' not in columns %}columsToHide.push(2);{% endif %}
+    {% if columns is not null and 'move_up_down' not in columns %}columsToHide.push(3);{% endif %}
+    {% if columns is not null and 'label' not in columns %}columsToHide.push(4);{% endif %}
+    {% if columns is not null and 'wikipedia_link' not in columns %}columsToHide.push(5);{% endif %}
+    {% if columns is not null and 'wikipedia_permalink' not in columns %}columsToHide.push(6);{% endif %}
+    {% if columns is not null and 'dbpedia_link' not in columns %}columsToHide.push(7);{% endif %}
+    {% if columns is not null and 'category' not in columns %}columsToHide.push(8);{% endif %}
+    {% if columns is not null and 'remove_wikipedia_link' not in columns %}columsToHide.push(9);{% endif %}
+    {% if columns is not null and 'alias' not in columns %}columsToHide.push(10);{% endif %}
+    {% if columns is not null and 'remove_tag_from_list' not in columns %}columsToHide.push(11);{% endif %}
+    {% if columns is not null and 'alternative_label' not in columns %}columsToHide.push(12);{% endif %}
+    {% if columns is not null and 'alternative_wikipedia_url' not in columns %}columsToHide.push(13);{% endif %}
+    
+    $(document).ready(function(){
+        wikitag_init_tags_events();
+        wikitag_init_datasheet_events();
+    });
+</script>

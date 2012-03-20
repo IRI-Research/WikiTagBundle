@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  This file is part of the WikiTagBundle package.
+
+  (c) IRI <http://www.iri.centrepompidou.fr/>
+
+  For the full copyright and license information, please view the LICENSE
+  file that was distributed with this source code.
+-->
+
+
+<!-- http://www.phpunit.de/manual/current/en/appendixes.configuration.html -->
+<!-- command line in the host application : php bin/phpunit.php  -d memory_limit=512M -c vendor/bundles/IRI/Bundle/WikiTagBundle vendor/bundles/IRI/Bundle/WikiTagBundle/Tests/Services/SearchServiceTest.php -->
+<phpunit
+    backupGlobals               = "false"
+    backupStaticAttributes      = "false"
+    colors                      = "true"
+    convertErrorsToExceptions   = "true"
+    convertNoticesToExceptions  = "true"
+    convertWarningsToExceptions = "true"
+    processIsolation            = "false"
+    stopOnFailure               = "false"
+    syntaxCheck                 = "false"
+    bootstrap                   = "../../../../../app/bootstrap.php.cache" >
+
+    <testsuites>
+        <testsuite name="Project Test Suite">
+            <directory>Tests</directory>
+        </testsuite>
+    </testsuites>
+
+    <!--
+    <php>
+        <server name="KERNEL_DIR" value="/path/to/your/app/" />
+    </php>
+    -->
+
+    <!--filter>
+        <whitelist>
+            <directory>../src</directory>
+            <exclude>
+                <directory>../src/*/*Bundle/Resources</directory>
+                <directory>../src/*/*Bundle/Tests</directory>
+                <directory>../src/*/Bundle/*Bundle/Resources</directory>
+                <directory>../src/*/Bundle/*Bundle/Tests</directory>
+            </exclude>
+        </whitelist>
+    </filter-->
+
+</phpunit>

@@ -1,0 +1,99 @@
+{#
+  This file is part of the WikiTagBundle package.
+ 
+  (c) IRI <http://www.iri.centrepompidou.fr/>
+ 
+  For the full copyright and license information, please view the LICENSE
+  file that was distributed with this source code.
+#}
+{% block tag_table %}
+    <table id="wikitag_alltags_table">
+    <tr><th>id</th>
+        <th>
+        {% if sort != "laba" and sort != "labd" %}
+            <a href="?num_page=1&nb_by_page={{nb_by_page}}&sort=laba{% if searched and searched != "" %}&searched={{searched}}{% endif %}">label</a>
+        {% else %}
+            label &nbsp;
+            <a href="?num_page=1&nb_by_page={{nb_by_page}}&sort={{reverse_sort}}{% if searched and searched != "" %}&searched={{searched}}{% endif %}">
+            {% if sort == "laba" %}
+                <img src="{{ asset('bundles/wikitag/images/sort-asc.png') }}"/>
+            {% else %}
+                <img src="{{ asset('bundles/wikitag/images/sort-desc.png') }}"/>
+            {% endif %}
+            </a>
+        {% endif %}
+        </th>
+        <th>original_label</th>
+        <th class="wikitag_text_centered">Lien W</th>
+        <th class="wikitag_text_centered">Lien D</th>
+        <th>Catégorie</th>
+        <th class="wikitag_large_25 wikitag_text_centered">Supprimer le lien W</th>
+        <th>Alias</th>
+        <th>
+        {% if sort != "nba" and sort != "nbd" %}
+            <a href="?num_page=1&nb_by_page={{nb_by_page}}&sort=nbd{% if searched and searched != "" %}&searched={{searched}}{% endif %}">Nb de<br/>fiches</a>
+        {% else %}
+            Nb de<br/>fiches
+            <a href="?num_page=1&nb_by_page={{nb_by_page}}&sort={{reverse_sort}}{% if searched and searched != "" %}&searched={{searched}}{% endif %}">
+            {% if sort == "nba" %}
+                <img src="{{ asset('bundles/wikitag/images/sort-desc.png') }}"/>
+            {% else %}
+                <img src="{{ asset('bundles/wikitag/images/sort-asc.png') }}"/>
+            {% endif %}
+            </a>
+        {% endif %}
+        </th>
+        <th>
+        {% if sort != "popa" and sort != "popd" %}
+            <a href="?num_page=1&nb_by_page={{nb_by_page}}&sort=popd{% if searched and searched != "" %}&searched={{searched}}{% endif %}">Popularité</a>
+        {% else %}
+            Popularité &nbsp;
+            <a href="?num_page=1&nb_by_page={{nb_by_page}}&sort={{reverse_sort}}{% if searched and searched != "" %}&searched={{searched}}{% endif %}">
+            {% if sort == "popa" %}
+                <img src="{{ asset('bundles/wikitag/images/sort-desc.png') }}"/>
+            {% else %}
+                <img src="{{ asset('bundles/wikitag/images/sort-asc.png') }}"/>
+            {% endif %}
+            </a>
+        {% endif %}
+        </th></tr>
+    {% for ar in tags %}
+    {% set tag, nb_docs = ar.0, ar.nb_docs %}
+    <tr class="imageline {{ cycle(['wikitag_oddline', 'wikitag_evenline'], loop.index) }}">
+        <td class="wikitag_reset_wp_info">{{tag.id}}</td>
+        <td class="wikitag_{{tag.urlstatustext}} wikipediatag" id="{{tag.id}}" >{{tag.label}}</td>
+        <td>{{tag.originallabel}}</td>
+        <td class="wikitag_text_centered">
+          {% if tag.wikipediaurl and tag.wikipediaurl != ""  %}
+            <a class="wikitag_a_icon wikitag_wp_link" href="{{tag.wikipediaurl}}" target="_blank" />
+          {% else %}
+            <a class="wikitag_a_icon wikitag_wp_nolink" href="http://fr.wikipedia.org/w/index.php?search={{tag.label}}" target="_blank" />
+          {% endif %}
+        </td>
+        <td class="wikitag_text_centered">
+            {% if tag.dbpediauri and tag.dbpediauri != ""  %}
+            <a class="wikitag_a_icon wikitag_wp_dbplink" href="{{tag.dbpediauri}}" target="_blank" />
+            {% else %}
+            &nbsp;
+            {% endif %}
+        </td>
+        <td class="wikitag_category" id="{{tag.id}}">{% if tag.category %}{{ tag.category.label }}{% endif %}</td>        
+        {% if not tag.urlstatus or tag.urlstatus == 0 %}
+        <td class="wikitag_text_centered wikitag_td_icon wikitag_relaunch_wp_search" id="{{tag.id}}" alt="{{tag.label}}" ></td>
+        {% elseif   tag.urlstatus == 4 %}
+        <td class="wikitag_text_centered wikitag_td_icon"></td>
+        {% else %}        
+        <td class="wikitag_text_centered wikitag_td_icon wikitag_remove_wp_link" id="{{tag.id}}" alt="{{tag.label}}" ></td>        
+        {% endif %}            
+        <td class="wikitag_alias" id="{{tag.id}}" >{% if tag.alias %}{{tag.alias}}{% endif %}</td>
+        <td class="wikitag_text_centered">
+        {% if nb_docs > 0 %}
+            <a href="{{ url(route_for_documents_by_tag) }}?tag={{tag.id}}" >{{nb_docs}}</a>
+        {% else %}
+            {{nb_docs}}
+        {% endif %}
+        </td>
+        <td class="wikitag_text_centered">{{tag.popularity}}</td></tr>
+    {% endfor %}
+    </table>
+{% endblock %}

@@ -1,0 +1,54 @@
+##
+# This file is part of the WikiTagBundle package.
+#
+# (c) IRI <http://www.iri.centrepompidou.fr/>
+#
+# For the full copyright and license information, please view the LICENSE
+# file that was distributed with this source code.
+##
+
+IRI\Bundle\WikiTagBundle\Entity\DocumentTag:
+  type: entity
+  repositoryClass: IRI\Bundle\WikiTagBundle\Entity\DocumentTagRepository
+  table: wikitag_document_tag
+  fields:
+    id:
+      type: integer
+      id: true
+      generator:
+        strategy: AUTO
+    originalOrder:
+      type: integer
+      column: original_order
+    tagOrder:
+      type: integer
+      column: tag_order
+    indexNote:
+      type: float
+      column: index_note
+    wikipediaRevisionId:
+      type: bigint
+      column: wikipedia_revision_id
+      nullable: true
+    createdAt:
+      type: datetime
+      column: created_at
+      nullable: false      
+  manyToOne:
+    tag:
+      targetEntity: Tag
+      inversedBy: documents
+      joinColumn:
+        name: tag_id
+        referencedColumnName: id
+        nullable: false
+        onDelete: cascade
+    document:
+      targetEntity: Document
+      inversedBy: tags
+      cascade: ["detach"]
+      joinColumn: 
+        name: document_id
+        referencedColumnName: id
+        nullable: false
+  lifecycleCallbacks: {  }

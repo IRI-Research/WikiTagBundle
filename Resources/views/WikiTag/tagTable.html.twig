@@ -1,0 +1,75 @@
+{#
+  This file is part of the WikiTagBundle package.
+ 
+  (c) IRI <http://www.iri.centrepompidou.fr/>
+ 
+  For the full copyright and license information, please view the LICENSE
+  file that was distributed with this source code.
+#}
+{# partial display document's tags (table only) #}
+  <table id="wikitag_table">
+   <thead>
+   <tr class="nodrop nodrag">
+    <th>#</th>
+    <th class="wikitag_updown_td wikitag_td_icon"><span>Haut Bas</span></th>
+    <th>id</th>
+    <th>label</th>
+    <th class="wikitag_text_centered">Lien W</th>
+    <th class="wikitag_text_centered">pLien W</th>
+    <th class="wikitag_text_centered">Lien D</th>
+    <th>Catégorie</th>
+    <th class="wikitag_large_25 wikitag_text_centered">Supprimer<br/> le lien W</th>
+    <th>Alias</th>
+    <th class="wikitag_large_25 wikitag_text_centered">Retirer le tag</th>
+    <th>Label redirigé</th>
+    <th class="wikitag_text_centered">Lien<br/> redirigé</th>
+    <th id="wikitag_thSelectColumn"><ul id="wikitag_ulSelectColumn"><li><img src="{{ asset('bundles/wikitag/images/sort-desc.png') }}" alt="select columns" title="select columns" />
+      <ul id="wikitag_ul_target"></ul></li></ul>
+    </th>
+  </tr>
+  </thead>
+  
+  <tbody>
+  {% for t in ordered_tags %}
+    <tr class="imageline {{ cycle(['wikitag_oddline', 'wikitag_evenline'], loop.index) }}" id="{{loop.index}}">
+      <td>{{loop.index}}</td>
+      <td class="wikitag_updown_td wikitag_td_icon wikitag_text_centered"></td>
+      <td>{{t.tag.id}}</td>
+      <td class="wikitag_{{t.tag.urlstatustext}} wikipediatag" id="{{t.tag.id}}" >{{t.tag.label}}</td>
+      <td class="wikitag_text_centered">
+       {% if t.tag.wikipediaurl and t.tag.wikipediaurl != ""  %}
+        <a class="wikitag_a_icon wikitag_wp_link" href="{{t.tag.wikipediaurl}}" target="_blank" />
+       {% else %}
+        <a class="wikitag_a_icon wikitag_wp_nolink" href="http://fr.wikipedia.org/w/index.php?search={{t.tag.label}}" target="_blank"></a>
+       {% endif %}
+      </td>
+      <td class="wikitag_text_centered">
+       {% if t.wikipediarevisionid  %}
+        <a class="wikitag_a_icon wikitag_wp_permalink" href="{{t.wikipediaversionpermalink}}" target="_blank"></a>
+       {% else %}
+        &nbsp;
+       {% endif %}
+      </td>
+      <td class="wikitag_text_centered">
+       {% if t.tag.dbpediauri and t.tag.dbpediauri != ""  %}
+        <a class="wikitag_a_icon wikitag_wp_dbplink" href="{{t.tag.dbpediauri}}" target="_blank"></a>
+       {% else %}
+        &nbsp;
+       {% endif %}
+      </td>
+      <td class="wikitag_category" id="{{t.tag.id}}">{% if t.tag.category %}{{ t.tag.category.label }}{% endif %}</td>
+      <td class="wikitag_text_centered wikitag_td_icon wikitag_remove_wp_link" id="{{t.tag.id}}" alt="{{t.tag.label}}" ></td>
+      <td>{% if t.tag.alias %}{{t.tag.alias}}{% endif %}</td>
+      <td class="wikitag_text_centered wikitag_td_icon wikitag_remove_tag_from_list" id="{{t.tag.id}}" alt="{{t.tag.label}}" ></td>
+      <td>{% if t.tag.alternativelabel %}{{t.tag.alternativelabel}}{% endif %}</td>
+      <td class="wikitag_text_centered">
+       {% if t.tag.alternativewikipediaurl and t.tag.alternativewikipediaurl != ""  %}
+        <a class="wikitag_a_icon wikitag_wp_redirlink" href="{{t.tag.alternativewikipediaurl}}" target="_blank" />
+       {% endif %}
+      </td>
+      <td>&nbsp;</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+  </table>
+  

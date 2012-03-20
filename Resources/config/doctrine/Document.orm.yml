@@ -1,0 +1,42 @@
+##
+# This file is part of the WikiTagBundle package.
+#
+# (c) IRI <http://www.iri.centrepompidou.fr/>
+#
+# For the full copyright and license information, please view the LICENSE
+# file that was distributed with this source code.
+##
+
+IRI\Bundle\WikiTagBundle\Entity\Document:
+  type: entity
+  repositoryClass: IRI\Bundle\WikiTagBundle\Entity\DocumentRepository
+  table: wikitag_document
+  options:
+    type: MyISAM
+  fields:
+    id:
+      type: integer
+      id: true
+      generator:
+        strategy: AUTO
+    manualOrder:
+      type: boolean
+      column: manual_order
+    tagsStr:
+      type: text
+      column: tags_str
+      nullable: true
+    createdAt:
+      type: datetime
+      column: created_at
+      nullable: false
+  oneToMany:
+    tags:
+      targetEntity: DocumentTag
+      mappedBy: document
+      cascade: [ "remove" ]
+  indexes:
+    tags_str_document_fulltext_idx:
+        columns: ["tags_str"]
+            
+  lifecycleCallbacks: {  }
