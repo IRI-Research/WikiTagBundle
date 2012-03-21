@@ -23,6 +23,13 @@ WikiTagBundle is a php bundle for [Symfony 2](http://symfony.com/).
 * Install the dependencies : [PagerFanta](https://github.com/whiteoctober/Pagerfanta) and [Mondator](https://github.com/mandango/mondator).
 * Download the zipfile from the [downloads](https://github.com/) page and install it.
 * Once unzipped, just copy the IRI folder in your vendor/bundles folder. The folder hierarchy will be vendor/bundles/IRI/Bundle/WikiTagBundle.
+
+## License
+
+This bundle is under the CeCILL-C license. See the complete license in the bundle:
+
+    Resources/meta/LICENSE
+
    
 ## Getting Started
 * Install WikiTagBundle
