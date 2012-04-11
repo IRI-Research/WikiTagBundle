@@ -23,7 +23,6 @@
             </a>
         {% endif %}
         </th>
-        <th>original_label</th>
         <th class="wikitag_text_centered">Lien W</th>
         <th class="wikitag_text_centered">Lien D</th>
         <th>Catégorie</th>
@@ -62,7 +61,6 @@
     <tr class="imageline {{ cycle(['wikitag_oddline', 'wikitag_evenline'], loop.index) }}">
         <td class="wikitag_reset_wp_info">{{tag.id}}</td>
         <td class="wikitag_{{tag.urlstatustext}} wikipediatag" id="{{tag.id}}" >{{tag.label}}</td>
-        <td>{{tag.originallabel}}</td>
         <td class="wikitag_text_centered">
           {% if tag.wikipediaurl and tag.wikipediaurl != ""  %}
             <a class="wikitag_a_icon wikitag_wp_link" href="{{tag.wikipediaurl}}" target="_blank" />
