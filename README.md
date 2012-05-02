@@ -199,6 +199,19 @@ This option allows to ignore wikipedia errors instead of raising an exception. T
             ...    
             ignore_wikipedia_error: true
 
+## More configuration 4 : curl parameters
+This option enables to add any parameter to the curl requests, since the wikipedia request are made from the server. For example, it is useful when the server is behind a firewall.
+
+        wiki_tag:
+            ...    
+            curl_options:
+            	CURLOPT_HTTPPROXYTUNNEL:  'TRUE'
+            	CURLOPT_PROXYAUTH: 'CURLAUTH_NTLM'
+            	CURLOPT_USERAGENT: 'Mozilla/5.0 Gecko/20100101 Firefox/10.0.1'
+            	CURLOPT_PROXY: 'my.proxy.url:1234'
+            	CURLOPT_PROXYUSERPWD: 'MY-DOMAIN\user:password'
+            	CURLOPT_PROXYTYPE: 'CURLPROXY_HTTP'
+
 ## Services
 
 ### Document Service : wiki_tag.document - IRI\Bundle\WikiTagBundle\Services\DocumentService 
