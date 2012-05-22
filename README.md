@@ -150,16 +150,45 @@ This route is used by the list to create a link on the "nb of documents" column.
 
 
 ## More configuration 1 : tag list profile for a document
-Via config.yml, you can configure which columns are displayed by default for a given user. It also concerns the button "sort tags" 
-(This function orders tags depending of their presence in the text fields set in config.yml). 
-Is it is very simple, you define the list of columns the user profile will see by default. In the following example, the list values are the ones to use :
+Via config.yml, you can configure how columns are displayed for a given user. It also concerns the button "sort tags" 
+(this function orders tags depending of their presence in the text fields set in config.yml). 
+Is it is very simple. For each profile, you define the display property and the column name. 
+The 3 properties available are : 0 : never displayed and not available in the list, 1 : displayed by default and available in the list, 2 : hidden by default but available in the list 
+(the user can display the column if he wants, by clicking in the list). If the column is not in the profile or if the visibility parameter is undefined, it is considered as 0.
+The column ids are : sort\_tag, order, move\_up\_down, id, label, wikipedia\_link, wikipedia\_permalink, dbpedia\_link, category, remove\_wikipedia\_link, alias, remove\_tag\_from\_list, alternative\_label, alternative\_wikipedia\_url.
+The following example make it understable :
 
         wiki_tag:
             ...
             document_list_profile:
-                all:         [ 'sort_tag', 'order', 'id', 'move_up_down', 'label', 'wikipedia_link', 'wikipedia_permalink', 'dbpedia_link', 'category', 'remove_wikipedia_link', 'alias', 'remove_tag_from_list', 'alternative_label', 'alternative_wikipedia_url' ]
-                editor :     [ 'order', 'id', 'move_up_down', 'label', 'wikipedia_link', 'wikipedia_permalink', 'dbpedia_link', 'category', 'remove_wikipedia_link', 'remove_tag_from_list' ]
-                contributor: [ 'sort_tag', 'order', 'label', 'wikipedia_link', 'wikipedia_permalink', 'delete_wikipedia_link', 'remove_tag_from_list' ]
+                all:
+                    sort_tag:
+                        visibility: 0
+                    order:
+                        label:      'Pertinence'
+                        visibility: 1
+                    move_up_down:
+                        visibility: 1
+                    ...
+                    alternative_label:
+                        label:      'Label redirigé'
+                        visibility: 2
+                    alternative_wikipedia_url:
+                        label:      'Lien redirigé'
+                        visibility: 1
+                editor:
+                    order:
+                        label:      '#'
+                        visibility: 1
+                    move_up_down:
+                        visibility: 0
+                    ...
+                    alias:
+                        label:      'Alias'
+                        visibility: 1
+                    remove_tag_from_list:
+                        label:      'Retirer le tag'
+                        visibility: 2
 
 In these values, "sort_tag" means the sort tag button. All the other values are the available columns in the tag table.
 Once this configuration set, call the profile in your template. The profile has to be called in the javascript call AND in the html call. So your template will look like this :

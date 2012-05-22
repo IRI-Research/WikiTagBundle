@@ -37,21 +37,65 @@
     var update_tag_alias_url = "{{ url('wikitag_update_tag_alias') }}";
     var update_tag_category_url = "{{ url('wikitag_update_tag_category') }}";
     var categories_list = '{{ categories|raw }}';
+    
     // We prepare the list of the columns to hide
     var columsToHide = [];
-    {% if columns is not null and 'order' not in columns %}columsToHide.push(1);{% endif %}
-    {% if columns is not null and 'id' not in columns %}columsToHide.push(2);{% endif %}
-    {% if columns is not null and 'move_up_down' not in columns %}columsToHide.push(3);{% endif %}
-    {% if columns is not null and 'label' not in columns %}columsToHide.push(4);{% endif %}
-    {% if columns is not null and 'wikipedia_link' not in columns %}columsToHide.push(5);{% endif %}
-    {% if columns is not null and 'wikipedia_permalink' not in columns %}columsToHide.push(6);{% endif %}
-    {% if columns is not null and 'dbpedia_link' not in columns %}columsToHide.push(7);{% endif %}
-    {% if columns is not null and 'category' not in columns %}columsToHide.push(8);{% endif %}
-    {% if columns is not null and 'remove_wikipedia_link' not in columns %}columsToHide.push(9);{% endif %}
-    {% if columns is not null and 'alias' not in columns %}columsToHide.push(10);{% endif %}
-    {% if columns is not null and 'remove_tag_from_list' not in columns %}columsToHide.push(11);{% endif %}
-    {% if columns is not null and 'alternative_label' not in columns %}columsToHide.push(12);{% endif %}
-    {% if columns is not null and 'alternative_wikipedia_url' not in columns %}columsToHide.push(13);{% endif %}
+    var notInList = [];
+    
+    {% if columns['order'].visibility is defined %}
+	    {% if columns['order'].visibility==2 %}columsToHide.push(1);{% endif %}
+        {% if columns['order'].visibility==0 %}columsToHide.push(1);notInList.push(1);{% endif %}
+    {% else %}columsToHide.push(1);notInList.push(1);{% endif %}
+    {% if columns['move_up_down'].visibility is defined %}
+        {% if columns['move_up_down'].visibility==2 %}columsToHide.push(2);{% endif %}
+        {% if columns['move_up_down'].visibility==0 %}columsToHide.push(2);notInList.push(2);{% endif %}
+    {% else %}columsToHide.push(2);notInList.push(2);{% endif %}
+    {% if columns['id'].visibility is defined %}
+        {% if columns['id'].visibility==2 %}columsToHide.push(3);{% endif %}
+        {% if columns['id'].visibility==0 %}columsToHide.push(3);notInList.push(3);{% endif %}
+    {% else %}columsToHide.push(3);notInList.push(3);{% endif %}
+    {% if columns['label'].visibility is defined %}
+        {% if columns['label'].visibility==2 %}columsToHide.push(4);{% endif %}
+        {% if columns['label'].visibility==0 %}columsToHide.push(4);notInList.push(4);{% endif %}
+    {% else %}columsToHide.push(4);notInList.push(4);{% endif %}
+    {% if columns['wikipedia_link'].visibility is defined %}
+        {% if columns['wikipedia_link'].visibility==2 %}columsToHide.push(5);{% endif %}
+        {% if columns['wikipedia_link'].visibility==0 %}columsToHide.push(5);notInList.push(5);{% endif %}
+    {% else %}columsToHide.push(5);notInList.push(5);{% endif %}
+    {% if columns['wikipedia_permalink'].visibility is defined %}
+        {% if columns['wikipedia_permalink'].visibility==2 %}columsToHide.push(6);{% endif %}
+        {% if columns['wikipedia_permalink'].visibility==0 %}columsToHide.push(6);notInList.push(6);{% endif %}
+    {% else %}columsToHide.push(6);notInList.push(6);{% endif %}
+    {% if columns['dbpedia_link'].visibility is defined %}
+        {% if columns['dbpedia_link'].visibility==2 %}columsToHide.push(7);{% endif %}
+        {% if columns['dbpedia_link'].visibility==0 %}columsToHide.push(7);notInList.push(7);{% endif %}
+    {% else %}columsToHide.push(7);notInList.push(7);{% endif %}
+    {% if columns['category'].visibility is defined %}
+        {% if columns['category'].visibility==2 %}columsToHide.push(8);{% endif %}
+        {% if columns['category'].visibility==0 %}columsToHide.push(8);notInList.push(8);{% endif %}
+    {% else %}columsToHide.push(8);notInList.push(8);{% endif %}
+    {% if columns['remove_wikipedia_link'].visibility is defined %}
+        {% if columns['remove_wikipedia_link'].visibility==2 %}columsToHide.push(9);{% endif %}
+        {% if columns['remove_wikipedia_link'].visibility==0 %}columsToHide.push(9);notInList.push(9);{% endif %}
+    {% else %}columsToHide.push(9);notInList.push(9);{% endif %}
+    {% if columns['alias'].visibility is defined %}
+        {% if columns['alias'].visibility==2 %}columsToHide.push(10);{% endif %}
+        {% if columns['alias'].visibility==0 %}columsToHide.push(10);notInList.push(10);{% endif %}
+    {% else %}columsToHide.push(10);notInList.push(10);{% endif %}
+    {% if columns['remove_tag_from_list'].visibility is defined %}
+        {% if columns['remove_tag_from_list'].visibility==2 %}columsToHide.push(11);{% endif %}
+        {% if columns['remove_tag_from_list'].visibility==0 %}columsToHide.push(11);notInList.push(11);{% endif %}
+    {% else %}columsToHide.push(11);notInList.push(11);{% endif %}
+    {% if columns['alternative_label'].visibility is defined %}
+        {% if columns['alternative_label'].visibility==2 %}columsToHide.push(12);{% endif %}
+        {% if columns['alternative_label'].visibility==0 %}columsToHide.push(12);notInList.push(12);{% endif %}
+    {% else %}columsToHide.push(12);notInList.push(12);{% endif %}
+    {% if columns['alternative_wikipedia_url'].visibility is defined %}
+        {% if columns['alternative_wikipedia_url'].visibility==2 %}columsToHide.push(13);{% endif %}
+        {% if columns['alternative_wikipedia_url'].visibility==0 %}columsToHide.push(13);notInList.push(13);{% endif %}
+    {% else %}columsToHide.push(13);notInList.push(13);{% endif %}
+    
+    notInList.push(14);
     
     $(document).ready(function(){
         wikitag_init_tags_events();

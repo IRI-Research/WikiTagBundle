@@ -10,22 +10,22 @@
   <table id="wikitag_table">
    <thead>
    <tr class="nodrop nodrag">
-    <th>#</th>
-    <th class="wikitag_updown_td wikitag_td_icon"><span>Haut Bas</span></th>
-    <th>id</th>
-    <th>label</th>
-    <th class="wikitag_text_centered">Lien W</th>
-    <th class="wikitag_text_centered">pLien W</th>
-    <th class="wikitag_text_centered">Lien D</th>
-    <th>Catégorie</th>
-    <th class="wikitag_large_25 wikitag_text_centered">Supprimer<br/> le lien W</th>
-    <th>Alias</th>
-    <th class="wikitag_large_25 wikitag_text_centered">Retirer le tag</th>
-    <th>Label redirigé</th>
-    <th class="wikitag_text_centered">Lien<br/> redirigé</th>
-    <th id="wikitag_thSelectColumn"><ul id="wikitag_ulSelectColumn"><li><img src="{{ asset('bundles/wikitag/images/sort-desc.png') }}" alt="select columns" title="select columns" />
+     <th>{% if columns["order"].label is defined %}{{columns["order"].label}}{% else %}#{% endif %}</th>
+     <th class="wikitag_updown_td wikitag_td_icon"><span>Haut Bas</span></th>
+     <th>{% if columns["id"].label is defined %}{{columns["id"].label}}{% else %}id{% endif %}</th>
+     <th>{% if columns["label"].label is defined %}{{columns["label"].label}}{% else %}label{% endif %}</th>
+     <th class="wikitag_text_centered">{% if columns["wikipedia_link"].label is defined %}{{columns["wikipedia_link"].label}}{% else %}Lien W{% endif %}</th>
+     <th class="wikitag_text_centered">{% if columns["wikipedia_permalink"].label is defined %}{{columns["wikipedia_permalink"].label}}{% else %}pLien W{% endif %}</th>
+     <th class="wikitag_text_centered">{% if columns["dbpedia_link"].label is defined %}{{columns["dbpedia_link"].label}}{% else %}Lien D{% endif %}</th>
+     <th>{% if columns["category"].label is defined %}{{columns["category"].label}}{% else %}Catégorie{% endif %}</th>
+     <th class="wikitag_large_25 wikitag_text_centered">{% if columns["remove_wikipedia_link"].label is defined %}{{columns["remove_wikipedia_link"].label}}{% else %}Supprimer le lien W{% endif %}</th>
+     <th>{% if columns["alias"].label is defined %}{{columns["alias"].label}}{% else %}Alias{% endif %}</th>
+     <th class="wikitag_large_25 wikitag_text_centered">{% if columns["remove_tag_from_list"].label is defined %}{{columns["remove_tag_from_list"].label}}{% else %}Retirer le tag{% endif %}</th>
+     <th>{% if columns["alternative_label"].label is defined %}{{columns["alternative_label"].label}}{% else %}Label redirigé{% endif %}</th>
+     <th class="wikitag_text_centered">{% if columns["alternative_wikipedia_url"].label is defined %}{{columns["alternative_wikipedia_url"].label}}{% else %}Lien redirigé{% endif %}</th>
+     <th id="wikitag_thSelectColumn"><ul id="wikitag_ulSelectColumn"><li><img src="{{ asset('bundles/wikitag/images/sort-desc.png') }}" alt="select columns" title="select columns" />
       <ul id="wikitag_ul_target"></ul></li></ul>
-    </th>
+     </th>
   </tr>
   </thead>
   

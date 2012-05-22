@@ -176,8 +176,8 @@ function wikitag_init_tags_events()
         },
         dragHandle: "wikitag_updown_td"
     });
-    // Hide/show column management. We disable the possibility to hide menu (column 14).
-    $('#wikitag_table').columnManager({listTargetID:'wikitag_ul_target', onClass: 'wikitag_advon', offClass: 'wikitag_advoff', hideInList: [14], saveState: true, colsHidden: columsToHide});
+    // Hide/show column management.
+    $('#wikitag_table').columnManager({listTargetID:'wikitag_ul_target', onClass: 'wikitag_advon', offClass: 'wikitag_advoff', hideInList: notInList, saveState: true, colsHidden:columsToHide });
     //create the clickmenu from the target
     $('#wikitag_ulSelectColumn').clickMenu({onClick: function(){}});
 }

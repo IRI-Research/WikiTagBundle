@@ -10,7 +10,7 @@
 {% block document_tags %}
 <div id="tags_commands" style="float:left;width: 100%" >
     <div style="float:right;" id="wikitag_actions">
-     {% if columns is null or "sort_tag" in columns %}
+     {% if columns["sort_tag"].visibility is defined and columns["sort_tag"].visibility==1 %}
       <span>Trier les tags : <input type="image" src="{{ asset('bundles/wikitag/images/sort-descending.png') }}" name="trier" id="wikitag_tags_sort" /></span>
      {% endif %}
       <span>Ajouter un tag : <input type="text" name="wikitag_wp_search" id="wikitag_wp_search" size="35" /> <span id="wikitag_ok_search" class="wikitag_hand_cursor"><b>OK</b></span></span>
