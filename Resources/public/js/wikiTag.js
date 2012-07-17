@@ -270,6 +270,7 @@ function wikitag_init_search_context_events()
       }
     };
     $(document).ready(function(){
+        $("#wikitag_context_div").offset({left:0,top:0});
         for(c in reactive_selectors){
             $(reactive_selectors[c]).bind("mouseup", Kolich.Selector.mouseup);
         }

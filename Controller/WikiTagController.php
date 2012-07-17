@@ -50,7 +50,7 @@ class WikiTagController extends Controller
      * @param unknown_type $tags_list
      * @return \Symfony\Bundle\FrameworkBundle\Controller\Response
      */
-    public function addJavascriptAction($tags_list=false, $profile_name=null)
+    public function addJavascriptAction($tags_list=false, $profile_name=null, $read_only=false)
     {
         $cats = $this->getDoctrine()->getRepository('WikiTagBundle:Category')->findOrderedCategories();
         // $cats is {"Label":"Créateur"},{"Label":"Datation"},...
@@ -68,7 +68,8 @@ class WikiTagController extends Controller
         if($profile_array!=null && $profile_name!=null && $profile_name!=""){
             $columns_array = $profile_array[$profile_name];
         }
-        return $this->render('WikiTagBundle:WikiTag:javascript.html.twig', array('categories' => $categories, 'tags_list' => $tags_list, 'columns' => $columns_array));
+        
+        return $this->render('WikiTagBundle:WikiTag:javascript.html.twig', array('categories' => $categories, 'tags_list' => $tags_list, 'columns' => $columns_array, 'read_only' => $read_only));
     }
 
     /**
