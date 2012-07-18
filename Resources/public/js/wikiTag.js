@@ -263,7 +263,13 @@ function wikitag_init_search_context_events()
       var st = Kolich.Selector.getSelected();
       if(st!=''){
         // Behaviour after the text was selected
-        $("#wikitag_context_div").offset({left:e.pageX+10,top:e.pageY});
+		var o = 0;
+	    if($(window)){
+	        o = $(window).scrollTop();
+	    }else if($(document)){
+	        o = $(document).scrollTop();
+	    }
+        $("#wikitag_context_div").offset({left:e.pageX+10,top:e.pageY+o});
         $("#wikitag_context_div").show();
         $("#wikitag_context_div #wikitag_wp_search_context").val(st);
         $("#wikitag_context_div #wikitag_wp_search_context").autocomplete("search");

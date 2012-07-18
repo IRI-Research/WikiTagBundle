@@ -15,8 +15,8 @@
      {% endif %}
       <span>Ajouter un tag : <input type="text" name="wikitag_wp_search" id="wikitag_wp_search" size="35" /> <span id="wikitag_ok_search" class="wikitag_hand_cursor"><b>OK</b></span></span>
     </div>
-    <input type="hidden" name="wikitag_document_id" value="{{ doc_id }}" id="wikitag_document_id" />
-    <!--input type="hidden" name="wikitag_document_profile" value="profile_name" id="wikitag_document_profile" /-->
+    <input type="hidden" name="wikitag_document_id" value="{{doc_id}}" id="wikitag_document_id" />
+    <input type="hidden" name="wikitag_document_profile" value="{{profile_name}}" id="wikitag_document_profile" />
 </div>
 <div id="wikitag_table_container" class="wikitag_document_table">
   {% include 'WikiTagBundle:WikiTag:tagTable.html.twig' %}

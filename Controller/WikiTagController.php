@@ -109,7 +109,7 @@ class WikiTagController extends Controller
         
         $ordered_tags = $this->getDoctrine()->getRepository('WikiTagBundle:DocumentTag')->findOrderedTagsForDoc($id_doc);
         //$ordered_tags = null;
-        return $this->render('WikiTagBundle:WikiTag:documentTags.html.twig', array('ordered_tags' => $ordered_tags, 'doc_id' => $id_doc, 'columns' => $columns_array));
+        return $this->render('WikiTagBundle:WikiTag:documentTags.html.twig', array('ordered_tags' => $ordered_tags, 'doc_id' => $id_doc, 'columns' => $columns_array, 'profile_name' => $profile_name));
     }
 
     /**
@@ -151,7 +151,7 @@ class WikiTagController extends Controller
         }
         // Save datas.
         $em->flush();
-
+        
         return $this->renderDocTags($id_doc, $req->get('wikitag_document_profile'));
     }
 
@@ -389,11 +389,16 @@ class WikiTagController extends Controller
      * Generic render partial template
      * @param unknown_type $id_doc
      */
-    public function renderDocTags($id_doc)
+    public function renderDocTags($id_doc, $profile_name="")
     {
-        // Get tags and render the table
+        // Management of profiles for the list of displayed columns and reorder tag button
+        $profile_array = $this->container->getParameter("wiki_tag.document_list_profile");
+        $columns_array = null;
+        if($profile_array!=null && $profile_name!=null && $profile_name!=""){
+            $columns_array = $profile_array[$profile_name];
+        }
         $ordered_tags = $this->getDoctrine()->getRepository('WikiTagBundle:DocumentTag')->findOrderedTagsForDoc($id_doc);
-        return $this->render('WikiTagBundle:WikiTag:tagTable.html.twig', array('ordered_tags' => $ordered_tags, 'doc_id' => $id_doc));
+        return $this->render('WikiTagBundle:WikiTag:tagTable.html.twig', array('ordered_tags' => $ordered_tags, 'doc_id' => $id_doc, 'columns' => $columns_array, 'profile_name' => $profile_name));
     }
 
 
