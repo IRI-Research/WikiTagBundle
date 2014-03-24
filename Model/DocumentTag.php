@@ -220,10 +220,7 @@ abstract class DocumentTag implements DocumentTagInterface {
     */
     public function getWikipediaVersionPermalink()
     {
-        $WIKIPEDIA_VERSION_PERMALINK_TEMPLATE = "http://fr.wikipedia.org/w/index.php?oldid=";
-        return $WIKIPEDIA_VERSION_PERMALINK_TEMPLATE.$this->wikipediaRevisionId;
-    }
-    
-    
+    	return sprintf($GLOBALS["kernel"]->getContainer()->getParameter("wiki_tag.url_templates")["wikipedia_permalink"], $this->wikipediaRevisionId);
+	}
     
 }

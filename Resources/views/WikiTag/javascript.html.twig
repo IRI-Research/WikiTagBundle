@@ -20,7 +20,8 @@
 <script type="text/javascript" src="{{ asset('bundles/wikitag/js/wikiTag.js') }}" ></script>
 <script type="text/javascript">
 
-    var global_csrf_token = "{# csrf_token #}";
+    var global_csrf_token = '{# global_csrf_token #}';
+    var wikipedia_api_url = '{{ wikipedia_api_url }}';
     var static_url = "{{ asset('bundles/wikitag/') }}";
     var tag_up_down_url = "{{ url('wikitag_tag_up_down') }}";
     var remove_tag_from_list_url = "{{ url('wikitag_remove_tag_from_list') }}";
@@ -94,7 +95,9 @@
         {% if columns['alternative_wikipedia_url'].visibility==2 %}columsToHide.push(13);{% endif %}
         {% if columns['alternative_wikipedia_url'].visibility==0 %}columsToHide.push(13);notInList.push(13);{% endif %}
     {% else %}columsToHide.push(13);notInList.push(13);{% endif %}
-    
+
+    {% if columns==null %}columsToHide = [];notInList = [];{% endif %}
+
     notInList.push(14);
     
     $(document).ready(function(){

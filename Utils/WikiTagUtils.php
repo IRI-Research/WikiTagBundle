@@ -13,13 +13,7 @@ namespace IRI\Bundle\WikiTagBundle\Utils;
 use IRI\Bundle\WikiTagBundle\Entity\Tag;
 
 class WikiTagUtils
-{
-    // Constants
-    private static $WIKIPEDIA_API_URL = "http://fr.wikipedia.org/w/api.php";
-    private static $WIKIPEDIA_VERSION_PERMALINK_TEMPLATE = "http://fr.wikipedia.org/w/index.php?oldid=%s";
-    private static $DBPEDIA_URI_TEMPLATE = "http://dbpedia.org/resource/%s";
-    
-    
+{   
     /**
      * Cleans the tag label
      */
@@ -138,7 +132,7 @@ class WikiTagUtils
             
             $res = $ar[0];
             $pages = $ar[1];
-            #we know that we have at least one answer
+            // we know that we have at least one answer
             if(count($pages)>1 || count($pages)==0){
                 return WikiTagUtils::returnNullResult($res);
             }
@@ -151,23 +145,8 @@ class WikiTagUtils
         
         $revision_id = $page['lastrevid'];
         
-        // process language to extract the english label
-        $english_label = null;
-        if($status==Tag::$TAG_URL_STATUS_DICT["match"] || $status==Tag::$TAG_URL_STATUS_DICT["redirection"]){
-            if(array_key_exists("langlinks", $page)){
-                foreach ($page["langlinks"] as $ar) {
-                    if($ar["lang"]=="en"){
-                        $english_label = $ar["*"];
-                        break;
-                    }
-                }
-            }
-        }
-        // We create the dbpedia uri.
-        $dbpedia_uri = null;
-        if($english_label!=null && strpos($english_label, '#')===false){
-            $dbpedia_uri = WikiTagUtils::getDbpediaUri($english_label);
-        }
+        // Get the dbpedia uri by requesting dbpedia with sparql
+        $dbpedia_uri = WikiTagUtils::getDbpediaUri($new_label);
         
         $wp_response = array(
             'new_label'=>$new_label,
@@ -183,6 +162,48 @@ class WikiTagUtils
         
         return $wp_response;
     }
+    
+    /**
+     * Generic curl request
+     *
+     * @param string $url
+     * @return object (json decoded)
+     */
+    private static function curlRequest($url, $throw_error=true)
+    {
+    	$ch = curl_init();
+    	curl_setopt($ch, CURLOPT_URL, $url);
+    	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    	// default values
+    	curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:26.0) Gecko/20100101 Firefox/26.0');
+    	curl_setopt($ch, CURLOPT_TIMEOUT_MS, 5000);
+    	// Set options if they are set in the config.yml file, typically for proxy configuration.
+    	// Thanks to the configuration file, it will execute commands like "curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);" or "curl_setopt($ch, CURLOPT_PROXY, "xxx.yyy.zzz:PORT");"
+    	$curl_options = $GLOBALS["kernel"]->getContainer()->getParameter("wiki_tag.curl_options");
+    	foreach ($curl_options as $key => $value) {
+    		if(strtoupper($value)=='TRUE'){
+    			$value = TRUE;
+    		}
+    		else if (strtoupper($value)=='FALSE'){
+    			$value = FALSE;
+    		}
+    		else if (defined($value)){
+    			$value = constant($value);
+    		}
+    		curl_setopt($ch, constant($key), $value);
+    	}
+    	// end of treatment
+    	$res = curl_exec($ch);
+    	$curl_errno = curl_errno($ch);
+    	$curl_error = curl_error($ch);
+    	curl_close($ch);
+    
+    	if ($curl_errno > 0 && $throw_error) {
+    		throw new \Exception("$url\n request failed. cURLError #$curl_errno: $curl_error\n", $curl_errno, null);
+    	}
+    	
+    	return $res;
+	}
     
 
     /**
@@ -203,39 +224,9 @@ class WikiTagUtils
             }
         }
         
-        $url = WikiTagUtils::$WIKIPEDIA_API_URL.'?'.$params_str;
+        $url = $GLOBALS["kernel"]->getContainer()->getParameter("wiki_tag.url_templates")["wikipedia_api"].'?'.$params_str;
         
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        // default values
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.7; rv:10.0.1) Gecko/20100101 Firefox/10.0.1');
-        curl_setopt($ch, CURLOPT_TIMEOUT_MS, 5000);
-        // Set options if they are set in the config.yml file, typically for proxy configuration.
-        // Thanks to the configuration file, it will execute commands like "curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);" or "curl_setopt($ch, CURLOPT_PROXY, "xxx.yyy.zzz:PORT");"
-        $curl_options = $GLOBALS["kernel"]->getContainer()->getParameter("wiki_tag.curl_options");
-        foreach ($curl_options as $key => $value) {
-            if(strtoupper($value)=='TRUE'){
-                $value = TRUE;
-            }
-            else if (strtoupper($value)=='FALSE'){
-                $value = FALSE;
-            }
-            else if (defined($value)){
-                $value = constant($value);
-            }
-            curl_setopt($ch, constant($key), $value);
-        }
-        // end of treatment
-        $res = curl_exec($ch);
-        $curl_errno = curl_errno($ch);
-        $curl_error = curl_error($ch);
-        curl_close($ch);
-        
-        if ($curl_errno > 0) {
-            throw new \Exception("Wikipedia request failed. cURLError #$curl_errno: $curl_error\n", $curl_errno, null);
-        }
-        
+        $res = WikiTagUtils::curlRequest($url);
         $val = json_decode($res, true);
         $pages = $val["query"]["pages"];
         return array($res, $pages);
@@ -269,9 +260,63 @@ class WikiTagUtils
     /**
      * Builds DbPedia URI
      */
-    private static function getDbpediaUri($english_label)
+    public static function getDbpediaUri($label, $params=[], $throw_error=true, $req_param="label")
     {
-        return sprintf(WikiTagUtils::$DBPEDIA_URI_TEMPLATE, WikiTagUtils::urlize_for_wikipedia($english_label));
+    	// Get lang from url
+    	$dbp_url = $GLOBALS["kernel"]->getContainer()->getParameter("wiki_tag.url_templates")["dbpedia_sparql"];
+    	$lang = substr($dbp_url, 7, 2);
+    	// filter with regexp to avoid results with "category:LABEL" or other "abc:LABEL"
+    	$query = 'select distinct * where { ?s rdfs:label "'.$label.'"@'.$lang.' . FILTER (regex(?s, "^http\\\\://[^:]+$")) }';
+    	if($req_param=="pageid"){
+    		$query = 'select distinct * where { ?s dbpedia-owl:wikiPageID '.$label.' }';
+    	}
+    	elseif ($req_param=="wikiurl"){
+    		$query = 'select distinct * where { ?s foaf:isPrimaryTopicOf <'.$label.'> }';
+    	}
+    	
+    	$params = [
+    		"query" => $query,
+    		"format" => 'application/json',
+    	];
+    	
+    	$params_str = '';
+    	foreach ($params as $key => $value) {
+    		if ($params_str==''){
+    			$params_str = $key.'='.urlencode($value);
+    		}
+    		else{
+    			$params_str .= '&'.$key.'='.urlencode($value);
+    		}
+    	}
+    	
+    	$url = $GLOBALS["kernel"]->getContainer()->getParameter("wiki_tag.url_templates")["dbpedia_sparql"].'?'.$params_str;
+    	
+    	$res = WikiTagUtils::curlRequest($url, $throw_error);
+    	$val = json_decode($res, true);
+    	$uri = "";
+    	if($val){
+	    	if(array_key_exists("results", $val)){
+	    		if(array_key_exists("bindings", $val["results"])){
+	    			$len = count($val["results"]["bindings"]);
+	    			if($len > 0){
+	    				$uri = $val["results"]["bindings"][0]["s"]["value"];
+	    				if($len>1){
+	    					// If there are several results, we test the "url label" to see if it matches the label.
+	    					// Why ? Because, for example "1000" gets "Category:1000" and "1000" as result.
+	    					// We keep this code to be safe but the regexp in the sparql request normally avoids this problem.
+	    					for($i=0;$i<$len;$i++){
+	    						$res_uri = $val["results"]["bindings"][$i]["s"]["value"];
+	    						$url_label = substr( $res_uri, strrpos( $res_uri, '/' )+1 );
+	    						if(str_replace(" ", "_", $label) == $url_label){
+	    							$uri = $res_uri;
+	    						}
+	    					}
+	    				}
+	    			}
+	    		}
+	    	}
+    	}
+    	return $uri;
     }
     
     /**

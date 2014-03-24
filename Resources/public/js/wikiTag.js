@@ -70,7 +70,7 @@ function wikitag_init_tags_events()
     	autocomplete : {
 			source: function( request, response ) {
 				$.ajax({
-					url: "http://fr.wikipedia.org/w/api.php",
+					url: wikipedia_api_url,
 					dataType: "jsonp",
 					data: {
 						action: "opensearch",
@@ -189,7 +189,7 @@ function wikitag_init_datasheet_events()
     $("#wikitag_wp_search").autocomplete({
         source: function( request, response ) {
             $.ajax({
-                url: "http://fr.wikipedia.org/w/api.php",
+                url: wikipedia_api_url,
                 dataType: "jsonp",
                 data: {
                     action: "opensearch",
@@ -293,7 +293,7 @@ function wikitag_init_search_context_events()
     $("#wikitag_wp_search_context").autocomplete({
         source: function( request, response ) {
             $.ajax({
-                url: "http://fr.wikipedia.org/w/api.php",
+                url: wikipedia_api_url,
                 dataType: "jsonp",
                 data: {
                     action: "query",

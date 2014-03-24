@@ -69,7 +69,12 @@ class WikiTagController extends Controller
             $columns_array = $profile_array[$profile_name];
         }
         
-        return $this->render('WikiTagBundle:WikiTag:javascript.html.twig', array('categories' => $categories, 'tags_list' => $tags_list, 'columns' => $columns_array, 'read_only' => $read_only));
+        return $this->render('WikiTagBundle:WikiTag:javascript.html.twig', 
+        		array('wikipedia_api_url' => $this->container->getParameter("wiki_tag.url_templates")["wikipedia_api"], 
+        				'categories' => $categories, 
+        				'tags_list' => $tags_list, 
+        				'columns' => $columns_array, 
+        				'read_only' => $read_only));
     }
 
     /**
@@ -109,7 +114,12 @@ class WikiTagController extends Controller
         
         $ordered_tags = $this->getDoctrine()->getRepository('WikiTagBundle:DocumentTag')->findOrderedTagsForDoc($id_doc);
         //$ordered_tags = null;
-        return $this->render('WikiTagBundle:WikiTag:documentTags.html.twig', array('ordered_tags' => $ordered_tags, 'doc_id' => $id_doc, 'columns' => $columns_array, 'profile_name' => $profile_name));
+        return $this->render('WikiTagBundle:WikiTag:documentTags.html.twig', 
+        		array('ordered_tags' => $ordered_tags, 
+        				'doc_id' => $id_doc, 
+        				'columns' => $columns_array, 
+        				'profile_name' => $profile_name,
+        				'wikipedia_opensearch_url' => $this->container->getParameter("wiki_tag.url_templates")["wikipedia_opensearch"]));
     }
 
     /**
@@ -398,7 +408,12 @@ class WikiTagController extends Controller
             $columns_array = $profile_array[$profile_name];
         }
         $ordered_tags = $this->getDoctrine()->getRepository('WikiTagBundle:DocumentTag')->findOrderedTagsForDoc($id_doc);
-        return $this->render('WikiTagBundle:WikiTag:tagTable.html.twig', array('ordered_tags' => $ordered_tags, 'doc_id' => $id_doc, 'columns' => $columns_array, 'profile_name' => $profile_name));
+        return $this->render('WikiTagBundle:WikiTag:tagTable.html.twig', 
+        		array('ordered_tags' => $ordered_tags, 
+        				'doc_id' => $id_doc, 
+        				'columns' => $columns_array, 
+        				'profile_name' => $profile_name,
+        				'wikipedia_opensearch_url' => $this->container->getParameter("wiki_tag.url_templates")["wikipedia_opensearch"]));
     }
 
 
@@ -493,9 +508,21 @@ class WikiTagController extends Controller
         }
         
         return $this->render('WikiTagBundle:WikiTag:TagList.html.twig',
-            array('tags' => $tags, 'searched' => $searched, 'search_def' => $search_def, 'nb_by_page' => $nb_by_page, 'sort' => $sort,
-            'start_index' => $start_index, 'end_index' => $end_index, 'nb_total' => $nb_total, 'num_page' => $num_page, 'last_page' => $last_page,
-        	'prev_page' => $prev_page, 'next_page' => $next_page, 'reverse_sort' => $reverse_sort, 'route_for_documents_by_tag' => $this->container->getParameter("wiki_tag.route_for_documents_by_tag")));
+            array('tags' => $tags, 
+            		'searched' => $searched, 
+            		'search_def' => $search_def, 
+            		'nb_by_page' => $nb_by_page, 
+            		'sort' => $sort,
+            		'start_index' => $start_index, 
+            		'end_index' => $end_index, 
+            		'nb_total' => $nb_total, 
+            		'num_page' => $num_page, 
+            		'last_page' => $last_page,
+        			'prev_page' => $prev_page, 
+            		'next_page' => $next_page, 
+            		'reverse_sort' => $reverse_sort, 
+            		'route_for_documents_by_tag' => $this->container->getParameter("wiki_tag.route_for_documents_by_tag"),
+            		'wikipedia_opensearch_url' => $this->container->getParameter("wiki_tag.url_templates")["wikipedia_opensearch"]));
     }
 
     /**
@@ -605,8 +632,14 @@ class WikiTagController extends Controller
         $reverse_sort = $ar[5];
         
         return $this->render('WikiTagBundle:WikiTag:TagListTable.html.twig',
-            array('tags' => $tags, 'searched' => $searched, 'nb_by_page' => $nb_by_page, 'sort' => $sort, 'num_page' => $num_page,
-        	'reverse_sort' => $reverse_sort, 'route_for_documents_by_tag' => $this->container->getParameter("wiki_tag.route_for_documents_by_tag")));
+            array('tags' => $tags, 
+            		'searched' => $searched, 
+            		'nb_by_page' => $nb_by_page, 
+            		'sort' => $sort, 
+            		'num_page' => $num_page,
+        			'reverse_sort' => $reverse_sort, 
+            		'route_for_documents_by_tag' => $this->container->getParameter("wiki_tag.route_for_documents_by_tag"),
+            		'wikipedia_opensearch_url' => $this->container->getParameter("wiki_tag.url_templates")["wikipedia_opensearch"]));
     }
 
     /**

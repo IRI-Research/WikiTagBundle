@@ -65,7 +65,7 @@
           {% if tag.wikipediaurl and tag.wikipediaurl != ""  %}
             <a class="wikitag_a_icon wikitag_wp_link" href="{{tag.wikipediaurl}}" target="_blank" />
           {% else %}
-            <a class="wikitag_a_icon wikitag_wp_nolink" href="http://fr.wikipedia.org/w/index.php?search={{tag.label}}" target="_blank" />
+            <a class="wikitag_a_icon wikitag_wp_nolink" href="{{wikipedia_opensearch_url}}{{tag.label}}" target="_blank" />
           {% endif %}
         </td>
         <td class="wikitag_text_centered">

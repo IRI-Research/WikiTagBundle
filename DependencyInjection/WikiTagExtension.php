@@ -58,6 +58,7 @@ class WikiTagExtension extends Extension
         $container->setParameter("wiki_tag.fields", $fields);
         $fields['tagsStr'] = array("type"=>"text");
         $container->setParameter("wiki_tag.fields_all", $fields);
+        $container->setParameter("wiki_tag.url_templates", $config['url_templates']);
         $container->setParameter("wiki_tag.route_for_documents_by_tag", $config['route_for_documents_by_tag']);
         $container->setParameter("wiki_tag.reactive_selectors", $config['reactive_selectors']);
         $container->setParameter("wiki_tag.document_list_profile", $config['document_list_profile']);
