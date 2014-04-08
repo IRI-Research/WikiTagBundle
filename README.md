@@ -344,3 +344,13 @@ To run this migration, you have to copy the file Version20140129151724.php into 
 
         php app/console doctrine:migrations:migrate
 
+Do not forget to update the configuration file with the good urls (fr in this exemple) before running the migration :
+
+        wiki_tag:
+            [...]
+            url_templates:
+                wikipedia_api: 'http://fr.wikipedia.org/w/api.php'
+                wikipedia_permalink: 'http://fr.wikipedia.org/w/index.php?oldid=%s'
+                wikipedia_opensearch: 'http://fr.wikipedia.org/w/index.php?search='
+                dbpedia_sparql: 'http://fr.dbpedia.org/sparql'
+
