@@ -4,7 +4,8 @@ namespace Application\Migrations;
 
 use Doctrine\DBAL\Migrations\AbstractMigration,
     Doctrine\DBAL\Schema\Schema,
-	IRI\Bundle\WikiTagBundle\Utils\WikiTagUtils;
+	IRI\Bundle\WikiTagBundle\Utils\WikiTagUtils,
+	IRI\Bundle\WikiTagBundle\Listener\DocumentListener;
 
 /**
  * Migration for WikiTagBundle <= V00.13
@@ -25,6 +26,20 @@ class Version20140129151724 extends AbstractMigration
         $em = $GLOBALS["kernel"]->getContainer()->get( 'doctrine.orm.entity_manager' );
         // Avoid php annoying memory leaks
         $em->getConnection()->getConfiguration()->setSQLLogger(null);
+        
+        // remove event listener to avoid useless sql queries. Only WikiTag's Tags are modified
+        $listenerInst = null;
+        foreach ($em->getEventManager()->getListeners() as $event => $listeners) {
+        	foreach ($listeners as $hash => $listener) {
+        		if ($listener instanceof DocumentListener) {
+        			$listenerInst = $listener;
+        			break 2;
+        		}
+        	}
+        }
+        $listenerInst || die('Listener is not registered in the event manager');
+        $evm = $em->getEventManager();
+        $evm->removeEventListener(array('onFlush', 'preRemove', 'postPersist', 'postUpdate',  'postRemove'), $listenerInst);
         
         // First step : we populate the dbpedia uris thanks to the dbpedia-owl:wikiPageID
         echo "\nFIRST STEP";
