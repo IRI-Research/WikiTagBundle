@@ -43,27 +43,32 @@ class Version20140129151724 extends AbstractMigration
         
         // First step : we populate the dbpedia uris thanks to the dbpedia-owl:wikiPageID
         echo "\nFIRST STEP";
-        $query = $em->createQuery('SELECT t FROM WikiTagBundle:Tag t WHERE t.wikipediaPageId IS NOT NULL ORDER BY t.label ASC');//->setMaxResults(240)->setFirstResult(500);
-        $tags = $query->getResult();
-        $i = 1;
-        $nb_set = 0;
-        echo "\n".count($tags)." tags to search.";
-        foreach($tags as $tag){
-        	$l = $tag->getLabel();
-        	$uri = WikiTagUtils::getDbpediaUri($tag->getWikipediaPageId(), [], false, "pageid");
-        	$tag->setDbpediaUri($uri);
-        	$em->persist($tag);
-         if($uri!=NULL && $uri!=""){
-             $nb_set++;
-         }
-        	if( $i % 50 == 0 ){
-        		$em->flush();
-        		echo "\n    FLUSH";
-        	}
-        	$i++;
-        	echo "\n$i : $l \t\t: $uri";
-        }
-        $em->flush();
+        $query = $em->createQuery('SELECT count(t) FROM WikiTagBundle:Tag t WHERE t.wikipediaPageId IS NOT NULL');//->setMaxResults(240)->setFirstResult(500);
+        $nb = $query->getResult();
+        $nb = $nb[0][1];
+        $nb_batch = 50;
+        $nb_loops = ceil($nb / $nb_batch);
+	    $i = 1;
+	    $nb_set = 0;
+	    echo "\n".$nb." tags to search.";
+        for($il=0; $il<$nb_loops; $il++){
+	        $query = $em->createQuery('SELECT t FROM WikiTagBundle:Tag t WHERE t.wikipediaPageId IS NOT NULL ORDER BY t.id ASC')->setMaxResults($nb_batch)->setFirstResult($il*$nb_batch);
+	        $tags = $query->getResult();
+	        foreach($tags as $tag){
+	        	$l = $tag->getLabel();
+	        	$uri = WikiTagUtils::getDbpediaUri($tag->getWikipediaPageId(), array(), false, "pageid");
+	        	$tag->setDbpediaUri($uri);
+	        	$em->persist($tag);
+		        if($uri!=NULL && $uri!=""){
+		            $nb_set++;
+		        }
+	        	$i++;
+	        	echo "\n$i : $l \t\t: $uri";
+	        }
+	        echo "\n    FLUSH";
+	        $em->flush();
+	        $em->clear();
+    	}
         echo "\nFIRST STEP : $nb_set uris found";
         
         
@@ -76,7 +81,7 @@ class Version20140129151724 extends AbstractMigration
         echo "\n".count($tags)." tags to search.";
         foreach($tags as $tag){
         	$l = $tag->getLabel();
-        	$uri = WikiTagUtils::getDbpediaUri($tag->getWikipediaUrl(), [], false, "wikiurl");
+        	$uri = WikiTagUtils::getDbpediaUri($tag->getWikipediaUrl(), array(), false, "wikiurl");
         	$tag->setDbpediaUri($uri);
         	$em->persist($tag);
             if($uri!=NULL && $uri!=""){
@@ -102,7 +107,7 @@ class Version20140129151724 extends AbstractMigration
         echo "\n".count($tags)." tags to search.";
         foreach($tags as $tag){
         	$l = $tag->getLabel();
-        	$uri = WikiTagUtils::getDbpediaUri($tag->getLabel(), [], false);
+        	$uri = WikiTagUtils::getDbpediaUri($tag->getLabel(), array(), false);
         	$tag->setDbpediaUri($uri);
         	$em->persist($tag);
             if($uri!=NULL && $uri!=""){
@@ -117,6 +122,7 @@ class Version20140129151724 extends AbstractMigration
         }
         $em->flush();
         echo "\nTHIRD STEP : $nb_set uris found";
+        echo "\n\nTHIS IS THE END";
     }
 
     public function down(Schema $schema)

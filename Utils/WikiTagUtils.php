@@ -224,7 +224,8 @@ class WikiTagUtils
             }
         }
         
-        $url = $GLOBALS["kernel"]->getContainer()->getParameter("wiki_tag.url_templates")["wikipedia_api"].'?'.$params_str;
+        $url_templates = $GLOBALS["kernel"]->getContainer()->getParameter("wiki_tag.url_templates");
+        $url = $url_templates["wikipedia_api"].'?'.$params_str;
         
         $res = WikiTagUtils::curlRequest($url);
         $val = json_decode($res, true);
@@ -260,10 +261,11 @@ class WikiTagUtils
     /**
      * Builds DbPedia URI
      */
-    public static function getDbpediaUri($label, $params=[], $throw_error=true, $req_param="label")
+    public static function getDbpediaUri($label, $params=array(), $throw_error=true, $req_param="label")
     {
     	// Get lang from url
-    	$dbp_url = $GLOBALS["kernel"]->getContainer()->getParameter("wiki_tag.url_templates")["dbpedia_sparql"];
+    	$url_templates = $GLOBALS["kernel"]->getContainer()->getParameter("wiki_tag.url_templates");
+    	$dbp_url = $url_templates["dbpedia_sparql"];
     	$lang = substr($dbp_url, 7, 2);
     	// filter with regexp to avoid results with "category:LABEL" or other "abc:LABEL"
     	$query = 'select distinct * where { ?s rdfs:label "'.$label.'"@'.$lang.' . FILTER (regex(?s, "^http\\\\://[^:]+$")) }';
@@ -274,10 +276,10 @@ class WikiTagUtils
     		$query = 'select distinct * where { ?s foaf:isPrimaryTopicOf <'.$label.'> }';
     	}
     	
-    	$params = [
+    	$params = array(
     		"query" => $query,
     		"format" => 'application/json',
-    	];
+    	);
     	
     	$params_str = '';
     	foreach ($params as $key => $value) {
@@ -289,7 +291,8 @@ class WikiTagUtils
     		}
     	}
     	
-    	$url = $GLOBALS["kernel"]->getContainer()->getParameter("wiki_tag.url_templates")["dbpedia_sparql"].'?'.$params_str;
+    	$url_templates = $GLOBALS["kernel"]->getContainer()->getParameter("wiki_tag.url_templates");
+    	$url = $url_templates["dbpedia_sparql"].'?'.$params_str;
     	
     	$res = WikiTagUtils::curlRequest($url, $throw_error);
     	$val = json_decode($res, true);
