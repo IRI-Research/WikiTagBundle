@@ -10,6 +10,7 @@
 
 namespace IRI\Bundle\WikiTagBundle\Entity;
 
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Query;
 
 use Doctrine\ORM\QueryBuilder;
@@ -26,14 +27,19 @@ use Doctrine\ORM\NoResultException;
 class DocumentTagRepository extends EntityRepository
 {
    /**
-    *  Find ordered tags by document id
+    * Find ordered document tags by document id.
+    * Allow to control the hydration mode of the returned data (c.f. Doctrine\ORM\AbstractQuery::HYDRATE_*)
+    *
+    * @param mixed $doc_id The document id
+    * @param int   $hydrationMode Value from Doctrine\ORM\AbstractQuery::HYDRATE_*. 
+    * @return array (c.f from Doctrine\ORM\AbstractQuery::get_result())
     */
-    public function findOrderedTagsForDoc($doc_id)
+    public function findOrderedTagsForDoc($doc_id, $hydrationMode=AbstractQuery::HYDRATE_OBJECT)
     {
         return $this->getEntityManager()
-        ->createQuery("SELECT doctag FROM WikiTagBundle:DocumentTag doctag JOIN doctag.document doc WHERE doc.externalId=:doc_id ORDER BY doctag.tagOrder ASC")
+        ->createQuery("SELECT doctag, tag FROM WikiTagBundle:DocumentTag doctag JOIN doctag.tag tag JOIN doctag.document doc WHERE doc.externalId=:doc_id ORDER BY doctag.tagOrder ASC")
         ->setParameter("doc_id", strval($doc_id))
-        ->getResult();
+        ->getResult($hydrationMode);
     }
     
     private function findMaxOrderInUow($entityList, $doc_id, $max_order) {
